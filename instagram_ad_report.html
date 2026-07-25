@@ -19,6 +19,7 @@
   --line-green-hover:  #05b34c;
   --line-green-soft:   rgba(6,199,85,0.08);
   --line-green-tint:   rgba(6,199,85,0.20);
+  --line-green-lite:   rgba(6,199,85,0.34); /* subordinate (non-key) bars */
   /* Dark green — text use only (AA: 5.0:1 on white) */
   --line-green-text:   #05893d;
   --line-green-text-strong: #036934; /* 6.9:1 on white */
@@ -402,10 +403,9 @@ table { border-collapse: collapse; }
    ===================================================================== */
 .charts-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 20px;
 }
-@media (max-width: 1023px) { .charts-grid { grid-template-columns: 1fr; } }
 
 .chart-box {
   background: var(--bg-primary);
@@ -459,6 +459,44 @@ svg.chart {
   background: var(--bg-secondary);
   border-radius: var(--radius-md);
   margin-top: 16px;
+}
+
+/* Number-first hero header — makes the key result readable without hover */
+.chart-hero {
+  display: flex; align-items: center;
+  gap: 16px; flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.chart-hero-main {
+  display: flex; flex-direction: column;
+  padding: 12px 18px;
+  background: var(--line-green-soft);
+  border-radius: var(--radius-lg);
+}
+.chart-hero-cap { font-size: 11px; color: var(--text-tertiary); margin-bottom: 2px; }
+.chart-hero-val {
+  font-family: var(--font-num); font-weight: 700;
+  color: var(--line-green-text-strong);
+  line-height: 1; letter-spacing: -0.5px;
+}
+.chart-hero-val .n { font-size: 34px; }
+.chart-hero-val .u { font-size: 15px; font-weight: 500; margin-left: 3px; }
+.chart-hero-side { display: flex; flex-direction: column; gap: 6px; }
+.chart-hero-chip {
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 15px; font-weight: 700;
+  padding: 5px 14px; border-radius: 999px;
+  border: 1.5px solid var(--line-green);
+  font-variant-numeric: tabular-nums;
+}
+.chart-hero-chip.up   { background: var(--line-green); color: #fff; }
+.chart-hero-chip.flat { background: var(--bg-primary); color: var(--line-green-text-strong); }
+.chart-hero-start { font-size: 12px; color: var(--text-tertiary); }
+.chart-value-label {
+  font-size: 9.5px; font-weight: 700;
+  fill: var(--line-green-text-strong);
+  font-family: var(--font-num);
 }
 
 /* =====================================================================
@@ -1027,12 +1065,12 @@ svg.chart {
       <div class="card is-highlight">
         <div class="card-label">CPC改善</div>
         <div class="card-value">−70<span style="font-size:0.6em;font-weight:500">%</span></div>
-        <div class="card-sub">52円 → 約16円</div>
+        <div class="card-sub">52円 → 約15円</div>
       </div>
       <div class="card">
         <div class="card-label">CTR改善</div>
         <div class="card-value">×2.6</div>
-        <div class="card-sub">2.1% → 約5.4%</div>
+        <div class="card-sub">2.1% → 約5.5%</div>
       </div>
     </div>
   </div>
@@ -1050,6 +1088,16 @@ svg.chart {
         <div class="chart-head">
           <div class="chart-title">月別 広告費<span class="unit">円</span></div>
         </div>
+        <div class="chart-hero">
+          <div class="chart-hero-main">
+            <span class="chart-hero-cap">最新（2026年5月・ピーク）</span>
+            <span class="chart-hero-val"><span class="n">20.2</span><span class="u">万円</span></span>
+          </div>
+          <div class="chart-hero-side">
+            <span class="chart-hero-chip flat">段階拡大</span>
+            <span class="chart-hero-start">開始：1.5万円</span>
+          </div>
+        </div>
         <svg class="chart" id="chart-cost" viewBox="0 0 480 220" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="cost-title cost-desc">
           <title id="cost-title">月別 広告費の推移</title>
           <desc id="cost-desc">2025年3月の14,989円から2026年5月の201,910円まで、月別の広告費を示す棒グラフ。期間を通じて段階的に予算を拡大。</desc>
@@ -1060,6 +1108,16 @@ svg.chart {
         <div class="chart-head">
           <div class="chart-title">月別 クリック数<span class="unit">回</span></div>
         </div>
+        <div class="chart-hero">
+          <div class="chart-hero-main">
+            <span class="chart-hero-cap">最新（2026年5月）</span>
+            <span class="chart-hero-val"><span class="n">13,600</span><span class="u">回</span></span>
+          </div>
+          <div class="chart-hero-side">
+            <span class="chart-hero-chip up" aria-label="47倍に増加">×47</span>
+            <span class="chart-hero-start">開始：287回</span>
+          </div>
+        </div>
         <svg class="chart" id="chart-clicks" viewBox="0 0 480 220" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="clicks-title clicks-desc">
           <title id="clicks-title">月別 クリック数の推移</title>
           <desc id="clicks-desc">2025年3月の287クリックから2026年5月の13,600クリックまで、月別クリック数を示す棒グラフ。約47倍に増加。</desc>
@@ -1068,29 +1126,43 @@ svg.chart {
       </div>
       <div class="chart-box">
         <div class="chart-head">
-          <div>
-            <div class="chart-title">月別 CPC<span class="unit">クリック単価・円（低いほど良い）</span></div>
+          <div class="chart-title">月別 CPC<span class="unit">クリック単価・円（低いほど良い）</span></div>
+        </div>
+        <div class="chart-hero">
+          <div class="chart-hero-main">
+            <span class="chart-hero-cap">最新（2026年5月）</span>
+            <span class="chart-hero-val"><span class="n">15</span><span class="u">円</span></span>
           </div>
-          <span class="chart-badge is-down" aria-label="70%改善">70%</span>
+          <div class="chart-hero-side">
+            <span class="chart-hero-chip flat is-down" aria-label="70%改善">↓70%</span>
+            <span class="chart-hero-start">開始：52円</span>
+          </div>
         </div>
         <svg class="chart" id="chart-cpc" viewBox="0 0 480 220" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="cpc-title cpc-desc">
           <title id="cpc-title">月別 クリック単価の推移</title>
-          <desc id="cpc-desc">2025年3月の52円から2026年5月の約16円まで、約70%改善。低いほど効率が良いことを示す指標。</desc>
+          <desc id="cpc-desc">2025年3月の52円から2026年5月の約15円まで、約70%改善。低いほど効率が良いことを示す指標。</desc>
         </svg>
-        <p class="chart-caption">1クリックあたりにかかった広告費。<strong style="color:var(--line-green-text-strong)">52円 → 約16円（−70%）</strong>に最適化しました。</p>
+        <p class="chart-caption">1クリックあたりにかかった広告費。<strong style="color:var(--line-green-text-strong)">52円 → 約15円（−70%）</strong>に最適化しました。</p>
       </div>
       <div class="chart-box">
         <div class="chart-head">
-          <div>
-            <div class="chart-title">月別 CTR<span class="unit">クリック率・%（高いほど良い）</span></div>
+          <div class="chart-title">月別 CTR<span class="unit">クリック率・%（高いほど良い）</span></div>
+        </div>
+        <div class="chart-hero">
+          <div class="chart-hero-main">
+            <span class="chart-hero-cap">最新（2026年5月）</span>
+            <span class="chart-hero-val"><span class="n">5.5</span><span class="u">%</span></span>
           </div>
-          <span class="chart-badge is-up" aria-label="2.6倍向上">×2.6</span>
+          <div class="chart-hero-side">
+            <span class="chart-hero-chip up" aria-label="2.6倍向上">×2.6</span>
+            <span class="chart-hero-start">開始：2.1%</span>
+          </div>
         </div>
         <svg class="chart" id="chart-ctr" viewBox="0 0 480 220" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="ctr-title ctr-desc">
           <title id="ctr-title">月別 クリック率の推移</title>
-          <desc id="ctr-desc">2025年3月の2.1%から2026年5月の約5.4%まで、約2.6倍に向上。広告内容のターゲット適合度を示す指標。</desc>
+          <desc id="ctr-desc">2025年3月の2.1%から2026年5月の約5.5%まで、約2.6倍に向上。広告内容のターゲット適合度を示す指標。</desc>
         </svg>
-        <p class="chart-caption">広告が表示された回数のうちクリックされた割合。<strong style="color:var(--line-green-text-strong)">2.1% → 5.4%（×2.6）</strong>に向上しました。</p>
+        <p class="chart-caption">広告が表示された回数のうちクリックされた割合。<strong style="color:var(--line-green-text-strong)">2.1% → 5.5%（×2.6）</strong>に向上しました。</p>
       </div>
     </div>
   </div>
@@ -1203,7 +1275,7 @@ svg.chart {
           <h3>14ヶ月間の成果</h3>
           <ul class="summary-list">
             <li>ゼロからアカウントを立ち上げ、約2,800フォロワーを構築</li>
-            <li>広告のクリック単価を52円 → 16円前後（−70%）に最適化</li>
+            <li>広告のクリック単価を52円 → 15円前後（−70%）に最適化</li>
             <li>ルームツアー動画の発見により、CTR 7〜10%の高効率コンテンツを確立</li>
             <li>見学会1回あたり5〜20件の問い合わせ、来場予約約8件を獲得</li>
             <li>フォロワーキャンペーンでは業界平均の約1/7のコストで654人を獲得</li>
@@ -1652,7 +1724,7 @@ function drawAxesAndXLabels(grid, n) {
   return html;
 }
 
-function renderChart(svgId, data, type, fmtFn) {
+function renderChart(svgId, data, type, fmtFn, lblFn) {
   const svg = document.getElementById(svgId);
   if (!svg) return;
   const n = data.length;
@@ -1661,6 +1733,9 @@ function renderChart(svgId, data, type, fmtFn) {
   let html = grid.html;
   const { pl, pt, cw, ch } = grid;
   const gap = cw / n;
+  // key points get emphasis + an always-visible value label: first, peak, latest
+  const maxI = data.indexOf(Math.max(...data));
+  const keyIdx = new Set([0, maxI, n - 1]);
 
   if (type === 'bar') {
     const bw = gap * 0.62;
@@ -1669,19 +1744,24 @@ function renderChart(svgId, data, type, fmtFn) {
       const x = pl + gap * i + (gap - bw) / 2;
       const y = pt + ch - bh;
       const m = MONTHS[i];
-      html += `<rect class="bar" x="${x}" y="${y}" width="${bw}" height="${bh}" fill="var(--line-green)" rx="2"><title>${m.year}年${m.label}: ${fmtFn(v, false)}</title></rect>`;
+      const key = keyIdx.has(i);
+      const fill = key ? 'var(--line-green)' : 'var(--line-green-lite)';
+      html += `<rect class="bar" x="${x}" y="${y}" width="${bw}" height="${bh}" fill="${fill}" rx="2"><title>${m.year}年${m.label}: ${fmtFn(v, false)}</title></rect>`;
+      if (key) html += `<text class="chart-value-label" x="${x + bw / 2}" y="${y - 5}" text-anchor="middle">${lblFn(v)}</text>`;
     });
   } else {
     const pts = data.map((v, i) => `${pl + gap * (i + 0.5)},${pt + ch - ch * (v / maxV)}`).join(' ');
     // area under line (subtle)
     const areaPts = pts + ` ${pl + gap * (n - 0.5)},${pt + ch} ${pl + gap * 0.5},${pt + ch}`;
     html += `<polygon points="${areaPts}" fill="var(--line-green-soft)"/>`;
-    html += `<polyline points="${pts}" fill="none" stroke="var(--line-green)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    html += `<polyline points="${pts}" fill="none" stroke="var(--line-green)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;
     data.forEach((v, i) => {
       const x = pl + gap * (i + 0.5);
       const y = pt + ch - ch * (v / maxV);
       const m = MONTHS[i];
-      html += `<circle cx="${x}" cy="${y}" r="3.5" fill="var(--line-green)" stroke="#fff" stroke-width="1.5"><title>${m.year}年${m.label}: ${fmtFn(v, false)}</title></circle>`;
+      const key = (i === 0 || i === n - 1);
+      html += `<circle cx="${x}" cy="${y}" r="${key ? 4.5 : 3}" fill="var(--line-green)" stroke="#fff" stroke-width="1.5"><title>${m.year}年${m.label}: ${fmtFn(v, false)}</title></circle>`;
+      if (key) html += `<text class="chart-value-label" x="${x}" y="${y - 9}" text-anchor="${i === 0 ? 'start' : 'end'}">${lblFn(v)}</text>`;
     });
   }
 
@@ -1699,10 +1779,16 @@ const clicksArr = MONTHS.map(m => m.clicks);
 const cpcArr    = MONTHS.map(m => m.cpc);
 const ctrArr    = MONTHS.map(m => m.ctr);
 
-renderChart('chart-cost',   costArr,   'bar',  fmtCostShort);
-renderChart('chart-clicks', clicksArr, 'bar',  fmtClicksShort);
-renderChart('chart-cpc',    cpcArr,    'line', fmtCPCShort);
-renderChart('chart-ctr',    ctrArr,    'line', fmtCTRShort);
+// compact value labels shown on key data points (first / peak / latest)
+const lblCost   = v => v >= 10000 ? (v / 10000).toFixed(1) + '万' : Math.round(v / 1000) + 'K';
+const lblClicks = v => v >= 1000 ? (v / 1000).toFixed(1) + 'K' : Math.round(v);
+const lblCPC    = v => Math.round(v) + '円';
+const lblCTR    = v => v.toFixed(1) + '%';
+
+renderChart('chart-cost',   costArr,   'bar',  fmtCostShort,   lblCost);
+renderChart('chart-clicks', clicksArr, 'bar',  fmtClicksShort, lblClicks);
+renderChart('chart-cpc',    cpcArr,    'line', fmtCPCShort,    lblCPC);
+renderChart('chart-ctr',    ctrArr,    'line', fmtCTRShort,    lblCTR);
 
 })();
 </script>
